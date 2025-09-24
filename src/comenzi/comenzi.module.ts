@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ComenziController } from './comenzi.controller';
 import { ComenziService } from './comenzi.service';
+import { ComenziController } from './comenzi.controller';
 
 @Module({
+  providers: [ComenziService],
   controllers: [ComenziController],
-  providers: [ComenziService]
 })
 export class ComenziModule {}
