@@ -1,5 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ComenziService } from './comenzi.service';
+import { UppercasePipe } from 'src/uppercase/uppercase/uppercase.pipe';
 
 @Controller('comenzi')
 export class ComenziController {
@@ -17,9 +18,16 @@ export class ComenziController {
 
   @Get('search')
   search(
-    @Query('client') client?: string,
-    @Query('produs') produsNume?: string,
+    @Query('client', UppercasePipe) client?: string,
+    @Query('produs', UppercasePipe) produsNume?: string,
   ) {
     return this.comenziService.cautaComenzi(client, produsNume);
+  }
+
+  @Get('client/:name')
+  getOrdersByClient(@Param('name', UppercasePipe) name: string) {
+    return this.comenziService
+      .getComenzi()
+      .filter((c) => c.client.toUpperCase() === name);
   }
 }

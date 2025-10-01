@@ -1,5 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ProduseService } from './produse.service';
+import { UppercasePipe } from 'src/uppercase/uppercase/uppercase.pipe';
 
 @Controller('produse')
 export class ProduseController {
@@ -17,7 +18,7 @@ export class ProduseController {
 
   @Get('search')
   search(
-    @Query('nume') nume?: string,
+    @Query('nume', UppercasePipe) nume?: string,
     @Query('minPret') minPret?: string,
     @Query('maxPret') maxPret?: string,
   ) {
@@ -25,6 +26,15 @@ export class ProduseController {
       nume,
       minPret ? +minPret : undefined,
       maxPret ? +maxPret : undefined,
+    );
+  }
+
+  @Get(':name')
+  getProductByName(@Param('name', UppercasePipe) name: string) {
+    return (
+      this.produseService.getProduse().find(
+        (p) => p.nume.toUpperCase() === name,
+      ) || { message: 'Produs inexistent' }
     );
   }
 }
