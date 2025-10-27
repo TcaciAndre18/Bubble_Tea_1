@@ -1,6 +1,8 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, ParseIntPipe } from '@nestjs/common';
 import { ProduseService } from './produse.service';
 import { UppercasePipe } from 'src/uppercase/uppercase/uppercase.pipe';
+import { CreateProdusDto } from './dto/create-produs.dto';
+import { UpdateProdusDto } from './dto/update-produs.dto';
 
 @Controller('produse')
 export class ProduseController {
@@ -36,5 +38,20 @@ export class ProduseController {
         (p) => p.nume.toUpperCase() === name,
       ) || { message: 'Produs inexistent' }
     );
+  }
+
+  @Post('add')
+  create(@Body() dto: CreateProdusDto) {
+    return this.produseService.create(dto);
+  }
+
+  @Put(':id')
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProdusDto) {
+    return this.produseService.update(id, dto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.produseService.remove(id);
   }
 }
